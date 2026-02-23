@@ -1,73 +1,102 @@
-'use strict';
+"use strict";
 
 const field = document.querySelector(".field");
-const cellSize = 100;
+let cellSize = 0;
 
 const empty = {
-    value: 0,
-    top: 0,
-    left: 0
+  value: 0,
+  top: 0,
+  left: 0,
 };
 
 const cells = [];
 cells.push(empty);
 
-function move(index) {
-    const cell = cells[index];
+function updateDimensions() {
+  const field = document.querySelector(".field");
+  const gap = 5;
 
-    const leftdiff = Math.abs(empty.left - cell.left);
-    const topdiff = Math.abs(empty.top - cell.top);
-          
-    if (leftdiff + topdiff > 1) { return;}
+  cellSize = field.clientWidth / 4;
 
-    cell.element.style.left = `${empty.left * cellSize}px`;
-    cell.element.style.top = `${empty.top * cellSize}px`;
-
-    const emptyLeft = empty.left;
-    const emptyTop = empty.top;
-    empty.left = cell.left;
-    empty.top = cell.top;
-    cell.left = emptyLeft;
-    cell.top = emptyTop;
-
-    const isfinished = cells.every(cell => {
-       // console.log(cell.value,cell.top, cell.left);
-       return cell.value === cell.top * 4 + cell.left;
-       
-    });
-
-    if (isfinished) {
-        alert('You won');
+  cells.forEach((cell) => {
+    if (cell.element) {
+      cell.element.style.width = `${cellSize - gap}px`;
+      cell.element.style.height = `${cellSize - gap}px`;
+      cell.element.style.left = `${cell.left * cellSize + gap / 2}px`;
+      cell.element.style.top = `${cell.top * cellSize + gap / 2}px`;
+      cell.element.style.fontSize = `${cellSize * 0.4}px`;
     }
-   
+  });
+}
+
+function move(index) {
+  const cell = cells[index];
+
+  const leftDiff = Math.abs(empty.left - cell.left);
+  const topDiff = Math.abs(empty.top - cell.top);
+
+  if (leftDiff + topDiff > 1) return;
+
+  cell.element.style.left = `${empty.left * cellSize}px`;
+  cell.element.style.top = `${empty.top * cellSize}px`;
+
+  const tempLeft = empty.left;
+  const tempTop = empty.top;
+
+  empty.left = cell.left;
+  empty.top = cell.top;
+
+  cell.left = tempLeft;
+  cell.top = tempTop;
+
+  checkWin();
+}
+
+function checkWin() {
+  const isFinished = cells.every((cell) => {
+    if (cell.value === 0) return cell.top === 0 && cell.left === 0;
+    return true;
+  });
+
+  alert("You won");
 }
 
 const numbers = [...Array(15).keys()]
-    .sort(() => Math.random() - 0.5);
+  .map((x) => x + 1)
+  .sort(() => Math.random() - 0.5);
 
-for (let i = 1; i <= 15; i++) {
-    const cell = document.createElement('div');
-    const value = numbers[i - 1] + 1;
-    cell.className = 'cell';
-    cell.innerHTML = value;
+function initGame() {
+  field.innerHTML = "";
+
+  for (let i = 1; i <= 15; i++) {
+    const cellElement = document.createElement("div");
+    const value = numbers[i - 1];
+
+    cellElement.className = "cell";
+    cellElement.innerHTML = value;
 
     const left = i % 4;
     const top = (i - left) / 4;
 
-    cells.push({
-        value: value,
-        left: left,
-        top: top,
-        element: cell
-    })
+    const cellObj = {
+      value: value,
+      left: left,
+      top: top,
+      element: cellElement,
+    };
 
+    cells.push(cellObj);
+    field.append(cellElement);
 
-    cell.style.left = `${left * cellSize}px`;
-    cell.style.top = `${top * cellSize}px`;
-
-    field.append(cell);
-
-    cell.addEventListener('click', () => {
-        move(i);
+    cellElement.addEventListener("click", () => {
+      const index = cells.indexOf(cellObj);
+      move(index);
     });
+  }
+
+  updateDimensions();
 }
+
+window.addEventListener("resize", updateDimensions);
+
+initGame();
