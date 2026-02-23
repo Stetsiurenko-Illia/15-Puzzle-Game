@@ -55,11 +55,23 @@ function move(index) {
 function checkWin() {
   const isFinished = cells.every((cell) => {
     if (cell.value === 0) return cell.top === 0 && cell.left === 0;
-    return true;
+    return cell.value === cell.top * 4 + cell.left;
   });
 
-  alert("You won");
+  if (isFinished) {
+    showModal();
+  }
 }
+
+function showModal() {
+  const modal = document.getElementById("winModal");
+  modal.style.display = "block";
+}
+
+document.getElementById("closeModal").addEventListener("click", () => {
+  document.getElementById("winModal").style.display = "none";
+  location.reload();
+});
 
 const numbers = [...Array(15).keys()]
   .map((x) => x + 1)
