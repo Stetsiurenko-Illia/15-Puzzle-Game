@@ -1,0 +1,51 @@
+body{
+    /* background: url(fon.jpg); */
+    background-color: rgb(255, 149, 0);
+
+}
+.field{
+    width: 400px;
+    height: 400px;
+    border: 5px solid black;
+    border-radius: 10px;
+    position: relative;
+    color: white;
+}
+
+.cell {
+    box-sizing:border-box;
+    width: 100px;
+    height: 100px;
+    border: 3px solid blue;
+    border-radius: 10px;
+    position: absolute;
+    font-size: 50px;
+    transition: all 0.3s;
+    cursor: pointer;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+caption{
+    /* background-color: aqua; */
+    height: 5cm;
+    font-size:xx-large;
+    background: url(puzzle.jpg);
+}
+
+.empty{
+    height: 2cm;
+}
+
+.empty_column{
+    /* background-color: blue; */
+    width: 25%;
+    font-size:larger;
+}
+
+.game{
+    /* background: url(fon.jpg); */
+}
+
